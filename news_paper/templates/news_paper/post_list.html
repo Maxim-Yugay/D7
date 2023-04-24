@@ -1,0 +1,82 @@
+{% extends 'news_paper/default.html' %}
+
+{% load censor %}
+{% load custom_tags %}
+
+{% block title %}
+
+<h2>Posts</h2>
+<hr>
+{% endblock title %}
+
+{% block content %}
+{% load cache %}
+{% cache 30 title %}
+<h1>Все статьи.</h1>
+<form action = '' method="get">
+    {{filterset.form.as_p}}
+    <input type ='submit' value="Найти"/>
+</form>
+<hr>
+
+{% if perms.news_paper.add_post %}
+<a href = "{% url 'post_create' %}">Добавить пост</a>
+{% endif %}
+
+{% endcache %}
+
+{% load cache %}
+{% cache 30 post %}
+{% if post %}
+    <table>
+        <tr>
+            <td>Заголовок</td>
+            <td>Текст</td>
+            <td>Дата</td>
+
+            {% if perms.news_paper.change_post or perm.news_paper.delete_post %}
+            <td>Действия</td>
+
+            {% endif %}
+        </tr>
+        {% for p in post %}
+        <tr>
+            <td>{{p.title}}</td>
+            <td>{{p.text|truncatechars:20}}</td>
+            <td>{{p.dateCreation}}</td>
+
+            <td>
+                {% if perms.news_paper.change_post %}
+                <a href="{% url 'post_update' pk=p.id %}">Изменить</a>
+                {% endif %}
+                {% if perms.news_paper.delete_post %}
+                <a href="{% url 'post_delete' pk=p.id %}">Удалить</a>
+                {% endif %}
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <td>Нет публикаций</td>
+{% endif %}
+
+{% endcache %}
+
+{% if page_obj.has_previous %}
+    <a href="?{% url_replace page=1 %}">1</a>
+    {% if page_obj.previous_page_number != 1 %}
+        ...
+        <a href="?page={{page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+    {% endif %}
+{% endif %}
+
+{% if page_obj.has_next %}
+    <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+    {% if paginator.num_pages != page_obj.next_page_number %}
+        ...
+        <a href="?{% url_replace page=page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+    {% endif %}
+{% endif %}
+
+{% endblock content%}

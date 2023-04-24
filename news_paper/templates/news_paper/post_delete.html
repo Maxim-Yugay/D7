@@ -1,0 +1,14 @@
+{% extends 'news_paper/default.html' %}
+
+
+{% block content %}
+<h1>
+<hr>
+
+<form action="" method="post">
+     {% csrf_token %}
+     <p></p>
+     <input type = 'submit' value="Delete">
+</form>
+</h1>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'news_paper/default.html' %}
+{% load censor %}
+
+
+{% block title %}
+Post
+{% endblock title %}
+
+
+{% block content %}
+{{ post.author.authorUser }}<p>
+{{ post.title|censor }}<p>
+{{ post.text|censor }}<p>
+{{ post.dateCreation|date:'d M Y' }}
+
+{% endblock content %}

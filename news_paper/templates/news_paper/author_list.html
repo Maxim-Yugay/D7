@@ -1,0 +1,36 @@
+{% extends news_paper/default.html %}
+
+{% block titile %}
+Posts
+<hr>
+{% endblock titile %}
+
+{% block content%}
+{% if Author %}
+
+{% load cache %}
+{% cache 30 author %}
+
+<tabl>
+    <tr>
+        <td>Заголовок</td>
+        <td>Текст</td>
+        <td>Дата</td>
+    </tr>
+
+{% endcache %}
+
+    {% for a in Author %}
+
+        <tr>
+            <td>{{a.title}}</td>
+            <td>{{a.text|truncatechars:20}}</td>
+            <td>{{a.dateCreation}}</td>
+        </tr>
+
+</tabl>
+    {% endfor %}
+{% else %}
+    <td>Нет ни одной публикации</td>
+{% endif %}
+{% endblock content %}
